@@ -11,19 +11,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+
+
     <Button
-        android:id="@+id/btn_remove"
-        android:text="remove"
+        android:id="@+id/btn_removeAll"
+        android:text="removeall"
         android:layout_toRightOf="@+id/btn_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <Button
-        android:id="@+id/btn_removeAll"
-        android:text="removeall"
-        android:layout_toRightOf="@+id/btn_remove"
+        android:id="@+id/btn_jump"
+        android:text="jump"
+        android:layout_toRightOf="@+id/btn_removeAll"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+
     <com.ckw.zfsoft.customaddviewlayout.CustomAddViewLayout
         android:id="@+id/customView"
         android:layout_below="@+id/btn_add"

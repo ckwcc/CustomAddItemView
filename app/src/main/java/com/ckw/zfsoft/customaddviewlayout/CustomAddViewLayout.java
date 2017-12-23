@@ -6,7 +6,13 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RelativeLayout;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by ckw
@@ -15,19 +21,76 @@ import android.widget.LinearLayout;
 
 public class CustomAddViewLayout extends ViewGroup {
 
+    private List<String> mItemTexts = new ArrayList<>();
 
     public CustomAddViewLayout(Context context) {
-        super(context);
+        this(context,null);
     }
 
     public CustomAddViewLayout(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs,0);
     }
 
     public CustomAddViewLayout(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
+///////////////////////////////////////////////////////////////////////////////////////////////
+    //单选类型
+    public void setAllRadioButtonUnchecked(){
+        int count = getChildCount();
+        for (int i = 0; i <count; i++) {
+            RelativeLayout item = (RelativeLayout) getChildAt(i);
+            CheckBox radioButton = (CheckBox) item.getChildAt(0);
+            radioButton.setChecked(false);
+        }
+    }
 
+    public int getSelectedRadioButtonIndex(){
+        int count = getChildCount();
+        for (int i = 0; i <count; i++) {
+            RelativeLayout item = (RelativeLayout) getChildAt(i);
+            CheckBox radioButton = (CheckBox) item.getChildAt(0);
+            if(radioButton.isChecked()){
+                return i;
+            }
+        }
+        return -1;
+    }
+///////////////////////////////////////////////////////////////////////////////////////////////
+    //文本类型
+    /**
+     *
+     * @return 所有item文本
+     */
+    public List<String> getAllItemText(){
+        int count = getChildCount();
+        for (int i = 0; i < count; i++) {
+            RelativeLayout item = (RelativeLayout) getChildAt(i);
+            EditText editText = (EditText) item.getChildAt(1);
+            String s = editText.getText().toString();
+            mItemTexts.add(s);
+        }
+        return mItemTexts;
+    }
+
+    /**
+     * @return 只要item里面有一个没有内容，就返回false
+     */
+    public boolean checkAllItemText(){
+        int count = getChildCount();
+
+        for (int i = 0; i < count; i++) {
+            RelativeLayout item = (RelativeLayout) getChildAt(i);
+            EditText editText = (EditText) item.getChildAt(1);
+            String s = editText.getText().toString();
+            if("".equals(s)){
+                return false;
+            }
+        }
+        return true;
+
+    }
+///////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void addItemView(View view){
         addView(view);
@@ -51,12 +114,10 @@ public class CustomAddViewLayout extends ViewGroup {
         removeAllViews();
     }
 
-
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);
         int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-        Log.d("----", "onMeasure: 当前的模式："+heightMode);
 
         //建议的长宽，但还不是最终的，由模式决定
         int suggestWidth = MeasureSpec.getSize(widthMeasureSpec);
@@ -77,7 +138,7 @@ public class CustomAddViewLayout extends ViewGroup {
         }
 
         if(heightMode == MeasureSpec.AT_MOST || heightMode == MeasureSpec.UNSPECIFIED){
-            if(totalHeight>suggestHeight){
+            if(totalHeight>suggestHeight && suggestHeight != 0){
                 resultHeight = suggestHeight;
             }else {
                 resultHeight = totalHeight;
